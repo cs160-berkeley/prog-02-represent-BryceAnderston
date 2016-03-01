@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.user.represent.DetailedInfoActivity">
+
+    <LinearLayout android:id="@+id/details_layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button android:id="@+id/details_button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/back"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView android:id="@+id/details_imageview_photo"
+                android:layout_width="150dp"
+                android:layout_height="180dp" />
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:text=""/>
+            <LinearLayout
+                android:layout_width="190dp"
+                android:layout_height="180dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="  "/>
+                <TextView android:id="@+id/details_textview_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="___NAME___"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="\n"/>
+                <TextView android:id="@+id/details_textview_party"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="___PARTY___"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="\n"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_of"/>
+                <TextView android:id="@+id/details_textview_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="___DATE___"/>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="5dp">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/active_committees">
+        </TextView>
+        <ListView android:id="@+id/details_listview_committees"
+            android:layout_width="350dp"
+            android:layout_height="100dp">
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="5dp">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sponsored_bills">
+        </TextView>
+        <ListView android:id="@+id/details_listview_bills"
+            android:layout_width="350dp"
+            android:layout_height="100dp">
+        </ListView>
+
+    </LinearLayout>
+
+</RelativeLayout>

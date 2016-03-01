@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.user.represent.ElectionResultsActivity"
+    tools:deviceIds="wear_round">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_round"
+        android:visibility="invisible"/>
+
+    <TextView android:id="@+id/results_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/results_county_state"
+        android:textSize="12sp"
+        android:text="2012 Election"/>
+    <TextView android:id="@+id/results_county_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_above="@id/results_winner"
+        android:textSize="18sp"
+        android:text="___COUNTY_STATE___"/>
+
+    <TextView android:id="@+id/results_winner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:text="___WINNER___"/>
+    <TextView android:id="@+id/results_winpercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/results_winner"
+        android:textSize="18sp"
+        android:text="___WIN%___"/>
+
+    <TextView android:id="@+id/results_loser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/results_winpercent"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:text="___LOSER___"/>
+    <TextView android:id="@+id/results_losepercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/results_loser"
+        android:textSize="14sp"
+        android:text="___LOSE%___"/>
+</RelativeLayout>

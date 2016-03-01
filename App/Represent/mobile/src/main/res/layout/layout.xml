@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView android:id="@+id/item_imageview_photo"
+            android:layout_width="150dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/teddy_roosevelt"/>
+        <LinearLayout android:id="@+id/item_layout_info"
+            android:layout_width="190dp"
+            android:layout_height="180dp"
+            android:orientation="vertical">
+            <TextView android:id="@+id/item_textview_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="20dp"
+                android:text="___NAME___"/>
+            <TextView android:id="@+id/item_textview_party"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:layout_gravity="left"
+                android:text="___PARTY___"/>
+            <Button android:id="@+id/item_button_moreinfo"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/more_info"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/item_layout_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/email"
+            android:layout_marginStart="20dp"/>
+        <TextView android:id="@+id/item_url_email"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="___EMAIL___URL___"
+            android:layout_marginStart="40dp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/item_layout_website"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/website"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"/>
+        <TextView android:id="@+id/item_url_website"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:text="___EMAIL___URL___"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+    <TextView android:id="@+id/item_textview_twitter"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:padding="5dp"
+        android:text="____TWITTER____"
+        android:background="@drawable/drawable_twitter_border"/>
+</LinearLayout>
