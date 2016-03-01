@@ -17,6 +17,6 @@ None.
 
 * Hat tip to anyone who's code was used
 * ListView Coding based off https://www.youtube.com/watch?v=WRANgDgM2Zg
-  Unsused swiping Coding based off http://stackoverflow.com/questions/937313/fling-gesture-detection-on-grid-layout
-  Accelerator Coding taken from http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
-  Messaging code based off CatNip
+*  Unsused swiping Coding based off http://stackoverflow.com/questions/937313/fling-gesture-detection-on-grid-layout
+*  Accelerator Coding taken from http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
+*  Messaging code based off CatNip
