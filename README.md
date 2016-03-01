@@ -4,7 +4,7 @@ An app for looking up representatives.
 
 ## Authors
 
-Bryce Anderston ([your_email@berkeley.edu](mailto:your_email@berkeley.edu))
+Bryce Anderston ([bryceanderston@berkeley.edu](mailto:your_email@berkeley.edu))
 
 ## Demo Video
 
