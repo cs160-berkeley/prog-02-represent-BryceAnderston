@@ -18,24 +18,24 @@
             android:src="@drawable/teddy_roosevelt"/>
         <LinearLayout android:id="@+id/item_layout_info"
             android:layout_width="190dp"
-            android:layout_height="180dp"
+            android:layout_height="200dp"
             android:orientation="vertical">
             <TextView android:id="@+id/item_textview_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="35dp"
                 android:text="___NAME___"/>
             <TextView android:id="@+id/item_textview_party"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="15dp"
                 android:layout_gravity="left"
                 android:text="___PARTY___"/>
             <Button android:id="@+id/item_button_moreinfo"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="45dp"
                 android:text="@string/more_info"/>
         </LinearLayout>
     </LinearLayout>
@@ -43,32 +43,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/email"
             android:layout_marginStart="20dp"/>
         <TextView android:id="@+id/item_url_email"
-            android:layout_width="210dp"
+            android:autoLink="email"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="___EMAIL___URL___"
-            android:layout_marginStart="40dp" />
+            android:layout_marginStart="20dp" />
     </LinearLayout>
     <LinearLayout android:id="@+id/item_layout_website"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:text="@string/website"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"/>
         <TextView android:id="@+id/item_url_website"
-            android:layout_width="210dp"
+            android:autoLink="web"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="___EMAIL___URL___"
-            android:layout_marginStart="40dp"
+            android:text="___WEB___URL___"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"/>
     </LinearLayout>
     <TextView android:id="@+id/item_textview_twitter"

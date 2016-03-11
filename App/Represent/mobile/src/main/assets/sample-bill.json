@@ -1,0 +1,57 @@
+{
+  "bill_id": "hres36-111",
+  "sponsor": {
+    "name_suffix": null,
+    "nickname": null,
+    "last_name": "Lee",
+    "title": "Rep",
+    "middle_name": null,
+    "first_name": "Barbara"
+  },
+  "related_bill_ids": [],
+  "last_action_at": "2009-01-08",
+  "withdrawn_cosponsors_count": 0,
+  "congress": 111,
+  "enacted_as": null,
+  "introduced_on": "2009-01-08",
+  "history": {
+    "awaiting_signature": false,
+    "enacted": false,
+    "vetoed": false,
+    "active": false
+  },
+  "sponsor_id": "L000551",
+  "committee_ids": [
+    "HSHA"
+  ],
+  "number": 36,
+  "last_version": {
+    "urls": {
+      "pdf": "http://www.gpo.gov/fdsys/pkg/BILLS-111hres36ih/pdf/BILLS-111hres36ih.pdf",
+      "xml": "http://www.gpo.gov/fdsys/pkg/BILLS-111hres36ih/xml/BILLS-111hres36ih.xml",
+      "html": "http://www.gpo.gov/fdsys/pkg/BILLS-111hres36ih/html/BILLS-111hres36ih.htm"
+    },
+    "version_name": "Introduced in House",
+    "pages": 4,
+    "version_code": "ih",
+    "issued_on": "2009-01-08",
+    "bill_version_id": "hres36-111-ih"
+  },
+  "popular_title": null,
+  "short_title": null,
+  "urls": {
+    "congress": "http://beta.congress.gov/bill/111th/house-resolution/36",
+    "govtrack": "http://www.govtrack.us/congress/bills/111/hres36",
+    "opencongress": "http://www.opencongress.org/bill/111-hr36/show"
+  },
+  "last_version_on": "2009-01-08",
+  "chamber": "house",
+  "official_title": "Acknowledging the 40th anniversary of the election of Shirley Anita St. Hill Chisholm, the first African-American woman in Congress.",
+  "bill_type": "hres",
+  "cosponsors_count": 112,
+  "last_vote_at": null,
+  "search": {
+    "score": 1,
+    "type": "bill"
+  }
+}

@@ -27,7 +27,8 @@
 
             <ImageView android:id="@+id/details_imageview_photo"
                 android:layout_width="150dp"
-                android:layout_height="180dp" />
+                android:layout_height="180dp"
+                android:src="@drawable/teddy_roosevelt"/>
             <TextView
                 android:layout_width="10dp"
                 android:layout_height="match_parent"
@@ -44,21 +45,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="___NAME___"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="\n"/>
                 <TextView android:id="@+id/details_textview_party"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="___PARTY___"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="\n"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="@string/end_of"/>
                 <TextView android:id="@+id/details_textview_date"
                     android:layout_width="match_parent"

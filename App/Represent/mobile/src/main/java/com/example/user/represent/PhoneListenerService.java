@@ -31,15 +31,16 @@ public class PhoneListenerService extends WearableListenerService {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //you need to add this flag since you're starting a new activity from a service
             intent.putExtra("ZIPCODE_OR_USEPOS", zipcode);
-            Log.d("T", "onMessageReceived about to start watch Main2Activity with ZIPCODE_OR_USEPOS: " + zipcode);
+            intent.putExtra("USERAND", "Yes");
+            Log.d("T", "onMessageReceived about to start watch Main2Activity with USERAND and ZIPCODE_OR_USEPOS: " + zipcode);
             startActivity(intent);
         } else if (messageEvent.getPath().equalsIgnoreCase(DETAILS)) {
             String name = new String(messageEvent.getData()); // StandardCharsets.UTF_8); ???
             Intent intent = new Intent(this, DetailedInfoActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //you need to add this flag since you're starting a new activity from a service
-            intent.putExtra("NAME", name);
-            Log.d("T", "onMessageReceived about to start watch DetailedInfoActivity with NAME: " + name);
+            intent.putExtra("BIOGUIDE", name);
+            Log.d("T", "onMessageReceived about to start watch DetailedInfoActivity with BIOGUIDE: " + name);
             startActivity(intent);
         //} else if (messageEvent.getPath().equalsIgnoreCase(SCROLL)) {
             // UNUSED XXXX

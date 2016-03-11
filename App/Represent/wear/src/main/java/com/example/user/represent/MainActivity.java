@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -22,11 +23,62 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
+//import com.google.android.gms.location.LocationServices;
+
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.fabric.sdk.android.Fabric;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends Activity implements SensorEventListener {
+// For GoogleApi
+public class MainActivity extends Activity implements SensorEventListener {// ,
+        //GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    //private static final String TWITTER_KEY = "";
+    //private static final String TWITTER_SECRET = "";
+    //,
+    // For Sunlight Api
+    private String requestURL;
+    private static final String sunlightURL = "https://congress.api.sunlightfoundation.com";
+    private static final String sunlightGetLEGISLATORS = "/legislators/locate";
+    private static final String sunlightSearchZIP = "?zip=";
+    private static final String sunlightSearchLAT = "?latitude=";
+    private static final String sunlightAndLONG = "&longitude=";
+    private String sunLightQuery = "";
+    private static final String sunlightGetAPIKEY = "&apikey=";
+    private static final String sunlightKEY = "7dfe13f41a8d41d4aab7c74a86f84962";
+        //GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    //,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+
+    private static final String defaultData = "Rep Barbara Lee,Democrat,L000551" +
+            "_Sen Barabara Boxer,Democrat,B000711_Sen Dianne Feinstein,Democrat,F000062" +
+            "&CA,Alameda";
+
+    //Latitude and Longitude
+    String mlatitude;
+    String mlongitude;
+    //Use Double.parseDouble(str); to get doubles
+
+    //For geoCoding, sending to Results
+    private String mState;
+    private String mCounty;
 
     private TextView mTextView;
     // The list of data objects that will populate the ListView
@@ -50,10 +102,19 @@ public class MainActivity extends Activity implements SensorEventListener {
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
 
+    // For GoogleApi
+    //private GoogleApiClient mGoogleApiClient;
+    // CAN'T CALL GPS ON WATCH
+
+    // For Sunlight
+    // 7dfe13f41a8d41d4aab7c74a86f84962
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("T", "Watch Main onCreate begun: ");
         super.onCreate(savedInstanceState);
+        //TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        //Fabric.with(this, new Twitter(authConfig));
         //XXX FILL change layout?
         setContentView(R.layout.activity_main);
 
@@ -77,6 +138,17 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
         };
 
+        /*
+        //For GoogleApi
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addApi(Wearable.API)  // used for data layer API
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+                */
+
+
         //XXX ??? Can remove the below? NO!
         //final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         //stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -95,19 +167,28 @@ public class MainActivity extends Activity implements SensorEventListener {
         String message = "Null";
         // XXXX ??? MIGHT WANT TO FEATURE populateRepList as a seperate file?
         if (extras != null) {
+            // Remember zipcode is now Rawdata
             message = extras.getString("ZIPCODE");
+            Log.d("T", "Watch Main onCreate ZIPCODE = " + extras.getString("ZIPCODE"));
+            //POPULATE
+            populateRepList(message);
+            /*  // No longer use this, since always a url getting passed in.
             if (message.equals("CurrPos")) {
                 // Arbitrary zipcode
                 populateRepList(true, 23456);
             } else {
                 // Pull and use the zipcode
                 populateRepList(false, Integer.parseInt(message));
-            }
+            } */
         } else {
-            //Populate based on current position if brought up naturally.
-            populateRepList(true, 23456);
+            //POPULATE
+            //Populate based on default position if brought up naturally.
+            populateRepList(defaultData);
+            //populateRepList("congress.api.sunlightfoundation.com/legislators/locate?zip=94702&apikey=" +sunlightKEY);
         }
-        zipcodeOrCurrpos = message;
+        // LOCATION API
+        ////extractLatLong(message);
+        //zipcodeOrCurrpos = message;
         // XXX ??? HOW TO GET IN VALUES?
         //Create data to populate ListView
         // XXX ??? Might just pull in data from Mobile Activity.  Probably not.
@@ -118,51 +199,31 @@ public class MainActivity extends Activity implements SensorEventListener {
         registerClickCallback();
     }
 
-    private void populateRepList(Boolean useCurrentPos, int zipcode) {
-        // XXX Dummy:  Test data
-        Log.d("T", "Watch Main poupulateRepList procced with: useCurrentPos =" + useCurrentPos.toString()
-                + " and " + zipcode);
-        List<String> dumComs = new ArrayList<String>();
-        dumComs.add("Committee of superordination");
-        dumComs.add("Committee of small mammals");
-        dumComs.add("Committee of Getting Things DONE... tomorrow");
-        List<String> dumBills = new ArrayList<String>();
-        dumComs.add("Bill to prevent flossing");
-        dumComs.add("1985 Cross-chronological Homestead Act");
-        if (useCurrentPos) {
-            // DO ONE THING with current position. However get that.
-            // XXX DUMMY: This is test
-            repList.add(new Representative(R.drawable.andrew_jackson, "Mr. Samuels", "Independent", "IHaveMail@mail.com",
-                    "www.Iam.me", "tweettweet tweettweet", "1/22/1856", (ArrayList) dumComs,
-                    (ArrayList) dumBills));
-            repList.add(new Representative(R.drawable.dianne_feinstein, "Horace Mumphis", "Republican", "IMail@woosh.com",
-                    "www.hello.me", "tweettwitter", "1/22/2071", (ArrayList) dumComs,
-                    (ArrayList) dumBills));
-            repList.add(new Representative(R.drawable.barbara_boxer, "Jasmine", "Democrat", "IHaveMail@mail.com",
-                    "www.Iam.me", "tweettweet tweettweet", "1/22/1986", (ArrayList) dumComs,
-                    (ArrayList) dumBills));
-            repList.add(new Representative(R.drawable.teddy_roosevelt, "Marvin Coolander", "Democrat", "IHaveYourMail@mail.com",
-                    "www.Iam.me", "tweettweet tweettweet", "1/22/1992", (ArrayList) dumComs,
-                    (ArrayList) dumBills));
+    private void populateRepList(String rawData) {
+        // Get the address to pass in. Already is mUrl
+                // Now actually can populate list
+        // split  by & to get stateCouunty and
+        Log.d("T", "Watch Main populateRepList rawData: " + rawData);
+        String rawReps = rawData.split("&")[0];
+        String stateCounty = rawData.split("&")[1];
+        // split stateCounty to get mState and mCounty
+        mState = stateCounty.split(",")[0];
+        if (stateCounty.split(",").length > 1){
+            mCounty = stateCounty.split(",")[1];
         } else {
-            // DO SOMETHING WITH zipcode
-            // XXX DUMMY:  This is test code
-            if (zipcode > 4999) {
-                repList.add(new Representative(R.drawable.andrew_jackson, "Mr. Samuels", "Independent", "IHaveMail@mail.com",
-                        "www.Iam.me", "tweettweet tweettweet", "1/22/1856", (ArrayList) dumComs,
-                        (ArrayList) dumBills));
-                repList.add(new Representative(R.drawable.dianne_feinstein, "Horace Mumphis", "Republican", "IMail@woosh.com",
-                        "www.hello.me", "tweettwitter", "1/22/2071", (ArrayList) dumComs,
-                        (ArrayList) dumBills));
-            } else {
-                repList.add(new Representative(R.drawable.barbara_boxer, "Jasmine", "Democrat", "IHaveMail@mail.com",
-                        "www.Iam.me", "tweettweet tweettweet", "1/22/1986", (ArrayList) dumComs,
-                        (ArrayList) dumBills));
-                repList.add(new Representative(R.drawable.teddy_roosevelt, "Marvin Coolander", "Democrat", "IHaveYourMail@mail.com",
-                        "www.Iam.me", "tweettweet tweettweet", "1/22/1992", (ArrayList) dumComs,
-                        (ArrayList) dumBills));
-            }
+            mCounty = "Earthquake"; //County in state of Default
         }
+        // split rawReps to get a list of raw reps
+        for (String rawRep: rawReps.split("_")){
+            Representative currRep = new Representative();
+            // Set representative
+            currRep.setName(rawRep.split(",")[0]);
+            currRep.setParty(rawRep.split(",")[1]);
+            currRep.setBioguide_id(rawRep.split(",")[2]);
+            //Log.d("T", "Watch Main populateRepList: " + );
+            repList.add(currRep);
+        }
+        Log.d("T", "Watch Main populateRepList: " + mState + ", " + mCounty + ", : " + rawReps);
     }
 
     private void populateListView() {
@@ -170,6 +231,20 @@ public class MainActivity extends Activity implements SensorEventListener {
         ArrayAdapter<Representative> thisAdapater = new MyListAdapter();
         ListView repList = (ListView) findViewById(R.id.listView);
         repList.setAdapter(thisAdapater);
+    }
+
+    private void extractLatLong(String mUrl) {
+        // UNUSED
+        // congress.api.sunlightfoundation.com/legislators/locate?latitude
+        // =37.9
+        // &longitude
+        // =122.3
+        // &apikey=7dfe13f41a8d41d4aab7c74a86f84962
+        // split by "=&" results in storage at [0 : cong...itude, 1: 37.9, 2: longitude, 3: 122.3
+        mlatitude = mUrl.split("=|&")[1];
+        mlongitude = mUrl.split("=|&")[3];
+        Log.d("T", "Watch Main now has latitude and longitude: " + mlatitude + ", " + mlongitude);
+        //double value = Double.parseDouble(text); //if need be
     }
 
     // ArrayAdapter:  This is where the created sub-view item_layout comes into play.
@@ -218,18 +293,41 @@ public class MainActivity extends Activity implements SensorEventListener {
                 // XXX  !!! Sending the name, will be used to determine the representative to load
                 // ??? Might want to create IDs for representatives?
                 String sendName = clickedRep.getName();
+                String sendBioguide = clickedRep.getBioguide_id();
                 Intent sendIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
                 // !!! Set to "None" for random shake
-                sendIntent.putExtra("REP_NAME", sendName);
+                // RANDOM
+                sendIntent.putExtra("REP_NAME", sendBioguide);
                 // !!! Set to a random value if are calling for a random
                 sendIntent.putExtra("RANDOM_ZIPCODE", "None");
-                Log.d("T", "OK! about to start mobile Details with REP_NAME: "+ sendName);
+                Log.d("T", "OK! about to start mobile Details with REP_NAME: "+ sendBioguide);
                 startService(sendIntent);
+
                 // Also go to this representative's county's election results
+                // GEOCODING API
+                // sample:  "https://maps.googleapis.com/maps/api/geocode/output?parameters"
+                // output = "json" (or "xml")
+                // required parameters are latlng=DOUBLE,DOUBLE   &   key=MYKEY
+                //                          no spaces!
+                // location_type=LOCTYPE restricts results,    result_type=RESTYPE
+                // won't be using location_type (don't include)
+                // RESTYPE, for our purposes, is administrative_area_level_1 (state)
+                //  or  administrative_area_level_2 (county)
+                //examples:
+                // https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=MY_KEY
+                // https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&location_type=ROOFTOP&result_type=street_address&key=YOUR_API_KEY
+                // http://maps.googleapis.com/maps/api/geocode/json?address={zipcode}
+                // should return only locations with postal_code {zipcode} ???
+
+                // Send the full URL.  Will be handled by basic code from within Results?
+                //  Or pull out relevant values (STATE and COUNTY) here and now, and send those off?
+                // For Results, lots of Intents:  State and County
                 Intent resultIntent = new Intent(getBaseContext(), ElectionResultsActivity.class );
-                resultIntent.putExtra("REP_NAME", sendName);
+                //resultIntent.putExtra("REP_NAME", sendName);
+                resultIntent.putExtra("STATE", mState);
+                resultIntent.putExtra("COUNTY", mCounty);
                 Log.d("T", "about to start watch ElectionResultsActivity  for" +
-                        " county of : " + sendName);
+                        " county of : " + mCounty + ", " + mState);
                 startActivity(resultIntent);
                 // XXX !!! !!! What happens if click a rep while mobile on home screen?
                 // Are merely launching a new activity. The current activity has no bearing.
@@ -237,17 +335,33 @@ public class MainActivity extends Activity implements SensorEventListener {
         });
     }
 
+    // For GoogleApi (added mGoogle.__()
     // XXX FILL:  Implemt the shake functionality to call for a random Zip_code
     //Deactivate sensor when not in use
     protected void onPause() {
         super.onPause();
         senSensorManager.unregisterListener(this);
+        //mGoogleApiClient.disconnect();
     }
 
     protected void onResume() {
         super.onResume();
+        //mGoogleApiClient.connect();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
+
+    // For GoogleApi
+    /*
+    @Override
+    public void onConnected(Bundle bundle) {Log.d("T", "Watch Main onConnected procced: ");}
+
+    @Override
+    public void onConnectionSuspended(int i) {Log.d("T", "Watch Main onCnnectionSuspended procced: ");}
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connResult) {Log.d("T", "Watch Main onConnectionFailed procced: ");}
+    */
+
     // Get random number.
     // Send Intent to Mobile with random number as RANDOM_ZIPCODE
     // Restart this activity with ZIPCODE set to the random number
@@ -271,7 +385,18 @@ public class MainActivity extends Activity implements SensorEventListener {
                 if (speed > SHAKE_THRESHOLD) {
                     // Get random zipcode
                     //semi-DUMMY
-                    String randomZip = Integer.toString(new Random().nextInt(10000));
+                    // Choose valid random zipcode
+                    int i = 0;
+                    String randomZip = createRandomZip();//Integer.toString(new Random().nextInt(10000));
+                    /* while (checkNoReps(randomZip)) {
+                        randomZip = createRandomZip();
+                        i += 1;
+                        if (i > 100) {
+                            randomZip = "94702";
+                            i = -1;
+                        }
+                    }
+                    Log.d("T", "Took X iterations to get randomZip.  X=" + i); */
 
                     // FILLING:  Send the random zipcode through. Also: Rebuild self.
                     Intent sendIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
@@ -281,21 +406,29 @@ public class MainActivity extends Activity implements SensorEventListener {
                     sendIntent.putExtra("RANDOM_ZIPCODE", randomZip);
                     Log.d("T", "about to start watch Main2Activity with RANDOM_ZIPCODE: " + randomZip);
                     // DUMMY
-                    Context context = getApplicationContext();
-                    int duration = Toast.LENGTH_SHORT;
-                    String value = "Shook to: " + randomZip;
-                    Toast toast = Toast.makeText(context, value, duration);
-                    toast.show();
+                    //Context context = getApplicationContext();
+                    //int duration = Toast.LENGTH_LONG;
+                    //String value = "Shook to: " + randomZip;
+                    //Toast toast = Toast.makeText(context, value, duration);
+                    //toast.show();
 
                     startService(sendIntent);
+                    finish();
 
+                    /*
                     //Self.rebuild
                     Intent intent = new Intent(getBaseContext(), MainActivity.class );
                     //getBaseContext() vs this ?  Originally was this
                     // Feed a string version of the zipcode into the new intent
-                    intent.putExtra("ZIPCODE", randomZip);
-                    Log.d("T", "about to restart watch MainActivity with ZIPCODE: " + randomZip);
+                    // PART C :  remember that now require a URL directly
+                    sunLightQuery = sunlightSearchZIP + randomZip;
+                    String myPost = sunlightURL + sunlightGetLEGISLATORS + sunLightQuery
+                            + sunlightGetAPIKEY + sunlightKEY;
+                    intent.putExtra("ZIPCODE", myPost); //intent.putExtra("ZIPCODE", randomZip);
+                    Log.d("T", "about to restart watch MainActivity with ZIPCODE: " + randomZip
+                            + " and url " + myPost);
                     startActivity(intent);
+                    */
                 }
 
                 last_x = x;
@@ -303,6 +436,67 @@ public class MainActivity extends Activity implements SensorEventListener {
                 last_z = z;
             }
         }
+    }
+
+    private String createRandomZip() {
+        String zip = "";
+        for (int i=0; i < 5; i++) {
+            zip = zip + Integer.toString(new Random().nextInt(10));
+        }
+        return zip;
+    }
+
+    // Checks to see if a zipcode is valid, by checking if it returns _any_ reps.
+    // Returns True on a failuer (ie:  no reps detected)
+    private Boolean checkNoReps(String zipcode) {
+        String myPost;
+        sunLightQuery = sunlightSearchZIP + zipcode;
+        // Get the address to pass in.
+        myPost = sunlightURL + sunlightGetLEGISLATORS + sunLightQuery + sunlightGetAPIKEY + sunlightKEY;
+        InputStream inputStream = null;
+        String result = null;
+        // Perform the JSON get.
+        try {
+            HttpURLConnection urlConnection = null;
+            URL url = new URL(myPost);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.connect();
+            inputStream = urlConnection.getInputStream();
+            // json is UTF-8 by default
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+            StringBuilder sb = new StringBuilder();
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            result = sb.toString();
+        } catch (Exception e) {
+            Log.e("fail 3", e.toString());
+            Log.d("T", "FAILURE IN watch MAIN:  Most likely invalid URL");
+        } finally {
+            // Not sure of purpose of this.
+            try {
+                if (inputStream != null) inputStream.close();
+            } catch (Exception squish) {
+            }
+        }
+        // Now actually can test the reps
+        try {
+            JSONObject jObj_wrapper = new JSONObject(result);
+            // No need to count number representatives here
+            int numReps = jObj_wrapper.getInt("count");
+            if (numReps <= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("fail 3", e.toString());
+            Log.d("T", "FAILURE IN watch MAIN: " + e.toString());
+        }
+        Log.d("T", "FAILURE IN MAIN: How did it get to the end?");
+        return true;
     }
 
     @Override
@@ -346,6 +540,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             return true;
         }
     }
+
+
     // ListView Coding based off https://www.youtube.com/watch?v=WRANgDgM2Zg
     // Swiping Coding based off http://stackoverflow.com/questions/937313/fling-gesture-detection-on-grid-layout
     // Accelerator Coding based off http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125

@@ -31,20 +31,26 @@
             android:visibility="visible"
             android:textSize="40px"
             android:layout_marginTop="25dp"
-            android:text="Enter Zipcode"/>
+            android:text="or Enter Zipcode"/>
         <EditText android:id="@+id/main_editText_zipcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:inputType="number"
-            android:hint="Or go to a Random Zipcode"
-            android:maxLength="5"/>
+            android:hint="94702"
+            android:maxLength="5" />
         <Button android:id="@+id/main_button_findReps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="31.25dp"
             android:textSize="40px"
             android:text="Find Representatives!"/>
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"/>
 
     </LinearLayout>
 </RelativeLayout>

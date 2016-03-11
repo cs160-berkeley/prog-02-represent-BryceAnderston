@@ -16,7 +16,8 @@ public class WatchListenerService extends WearableListenerService {
     // These paths serve to differentiate different phone-to-watch messages
     private static final String USE_CURRENT = "/useCurrPos";
     private static final String USE_ZIPCODE = "/useZipcode";
-    // Another setting for
+    private static final String USE_FULLURL = "/useFullUrl";
+    // Another setting for the decision-maker
     // Or put the launcher for this activity in Main2?  Just pull the first name to initialize
     //private static final String USE_NAME = "/useName";
 
@@ -45,8 +46,36 @@ public class WatchListenerService extends WearableListenerService {
             intent.putExtra("ZIPCODE", data);
             Log.d("T", "WatchListenerService about to start watch MainActivity with ZIPCODE: " + data);
             startActivity(intent);
-        } else {
-            super.onMessageReceived( messageEvent );
+        } else if (messageEvent.getPath().equalsIgnoreCase( USE_FULLURL )) {
+            String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
+            Intent intent = new Intent(this, MainActivity.class );
+            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+            //you need to add this flag since you're starting a new activity from a service
+            // Feed a string version of the zipcode into the new intent
+            intent.putExtra("ZIPCODE", "FullUrl");
+            Log.d("T", "WatchListenerService about to start watch MainActivity with ZIPCODE: " + data);
+            startActivity(intent);
+        }
+        else {
+            Log.d("T", "WatchListenerService about to start watch MainActivity with path: "
+                    + messageEvent.getPath() + " and data: " + data);
+            String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
+            Intent intent = new Intent(this, MainActivity.class );
+            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+            //you need to add this flag since you're starting a new activity from a service
+            // Feed a string version of the zipcode into the new intent
+            intent.putExtra("ZIPCODE", data);
+            Log.d("T", "WatchListenerService  intent is: " + intent.toString());
+            Log.d("T", "WatchListenerService about to start watch MainActivity with ZIPCODE: " + data);
+            startActivity(intent);
+
+            // Treat as if just got path=Lat and data=Long
+            //intent.putExtra("ZIPCODE", "LatLong");
+            //intent.putExtra("LAT", messageEvent.getPath().substring(1, messageEvent.getPath().length()));
+            //intent.putExtra("LONG", data);
+            //
+            //super.onMessageReceived( messageEvent );
+            //1/0
         }
 
     }

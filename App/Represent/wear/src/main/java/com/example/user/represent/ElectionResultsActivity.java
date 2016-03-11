@@ -8,18 +8,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 public class ElectionResultsActivity extends Activity implements SensorEventListener {
@@ -30,6 +29,10 @@ public class ElectionResultsActivity extends Activity implements SensorEventList
     private TextView text_winpercent;
     private TextView text_loser;
     private TextView text_losepercent;
+
+    // My variables.  For setup
+    private String mState;
+    private String mCounty;
 
     // Sensor Variables:  Setup
     private SensorManager senSensorManager;
@@ -89,29 +92,71 @@ public class ElectionResultsActivity extends Activity implements SensorEventList
         //DUMMY case, but will need to use REP_NAME or other passed value
         if (extras != null) {
             Log.d("T", "Results has been created.");
-            String name = extras.getString("REP_NAME");
-            if (name.equalsIgnoreCase("Jasmine Clarice") || name.equalsIgnoreCase("Jasmine")
-                    || name.equalsIgnoreCase("Marvin Coolander")) {
-                text_countyState.setText("Alameda, CA");
-                text_winner.setText("Obama");
-                text_winpercent.setText("68%");
-                text_loser.setText("Romney");
-                text_losepercent.setText("32%");
-            } else {
-                text_countyState.setText("Mono, CA");
-                text_winner.setText("Romney");
-                text_winpercent.setText("54%");
-                text_loser.setText("Obama");
-                text_losepercent.setText("46%");
-            }
-        } else {
-            text_countyState.setText("Alameda, CA");
-            text_winner.setText("Obama");
-            text_winpercent.setText("68%");
-            text_loser.setText("Romney");
-            text_losepercent.setText("32%");
-            Log.d("T", "WARNING: ElectionResults got no extras");
+            mState = extras.getString("STATE");
+            mCounty = extras.getString("COUNTY");
+            extractDataPopulateView();
         }
+    }
+
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("election_county_2012.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    private void extractDataPopulateView() {
+        Log.d("T", "ElectionResultsActivity  mState, mCounty:" + mState + ", " + mCounty);
+        // Set to nothing
+        text_countyState.setText("SORRY");
+        text_winner.setText("We found no data");
+        text_winpercent.setText("for this location.");
+        text_loser.setText("");
+        text_losepercent.setText("");
+        try {
+            JSONArray jArr = new JSONArray(loadJSONFromAsset());
+            for (int i=0; i < jArr.length(); i++) {
+                JSONObject jObj = jArr.getJSONObject(i);
+                if (mState.equalsIgnoreCase(jObj.getString("state-postal"))
+                        && mCounty.equalsIgnoreCase(jObj.getString("county-name"))) {
+                    text_countyState.setText(mCounty + ", " + mState);
+                    Double obamaPer = jObj.getDouble("obama-percentage");
+                    Double romneyPer = jObj.getDouble("romney-percentage");
+                    if (obamaPer >= romneyPer) {
+                        text_winner.setText("OBAMA");
+                        text_winpercent.setText(obamaPer.toString() + "%");
+                        text_loser.setText("ROMNEY");
+                        text_losepercent.setText(romneyPer.toString() + "%");
+                    } else {
+                        text_winner.setText("ROMNEY");
+                        text_winpercent.setText(romneyPer.toString());
+                        text_loser.setText("OBAMA");
+                        text_losepercent.setText(obamaPer.toString());
+                    }
+                    return;
+                }
+
+            }
+        } catch (Exception e) {
+            Log.e("fail 3", e.toString());
+            Log.d("T", "ElectionResultsActivity  errored:");
+        }
+
     }
 
     // Shake functionality to call for a random Zip_code
@@ -125,6 +170,15 @@ public class ElectionResultsActivity extends Activity implements SensorEventList
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
+
+    private String createRandomZip() {
+        String zip = "";
+        for (int i=0; i < 5; i++) {
+            zip = zip + Integer.toString(new Random().nextInt(10));
+        }
+        return zip;
+    }
+
     // Get random number.
     // Send Intent to Mobile with random number as RANDOM_ZIPCODE
     // Restart this activity with ZIPCODE set to the random number
@@ -148,7 +202,9 @@ public class ElectionResultsActivity extends Activity implements SensorEventList
                 if (speed > SHAKE_THRESHOLD) {
                     // Get random zipcode
                     //semi-DUMMY
-                    String randomZip = Integer.toString(new Random().nextInt(10000));
+                    // Choose valid random zipcode
+                    int i = 0;
+                    String randomZip = createRandomZip();//Integer.toString(new Random().nextInt(10000));
 
                     // FILLING:  Send the random zipcode through. Also: Rebuild self.
                     Intent sendIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
@@ -160,12 +216,14 @@ public class ElectionResultsActivity extends Activity implements SensorEventList
                     startService(sendIntent);
 
                     //Self.rebuild
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class );
+                //    Intent intent = new Intent(getBaseContext(), MainActivity.class );
                     // This vs getBaseContext()?
                     // Feed a string version of the zipcode into the new intent
+                    /*
                     intent.putExtra("ZIPCODE", randomZip);
                     Log.d("T", "about to start watch MainActivity with ZIPCODE: " + randomZip);
                     startActivity(intent);
+                    */
                 }
 
                 last_x = x;

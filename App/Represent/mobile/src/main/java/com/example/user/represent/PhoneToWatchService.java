@@ -59,8 +59,9 @@ public class PhoneToWatchService extends Service {
             Log.d("T", "PhoneToWatchService got a null extras: ");
             return START_NOT_STICKY;
         }
-        // "useZipcode" or "useCurrPos"
+        // "useZipcode" or "useCurrPos" or UseFullUrl
         final String command = extras.getString("COMMAND");
+        // May also be a sunlight URL
         final String zipcode = extras.getString("ZIPCODE");
         Log.d("T", "PhoneToWatchService extras passed: ");
         //final Boolean useCurrentpos = extras.getBoolean("USE_CURRENTPOS");
@@ -94,9 +95,9 @@ public class PhoneToWatchService extends Service {
             @Override
             public void run() {
                 NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes( mApiClient ).await();
-                Log.d("T", "PhoneToWatchService GetConnectedNodes: ");
+                Log.d("T", "PhoneToWatchService SendMessage GetConnectedNodes: ");
                 for(Node node : nodes.getNodes()) {
-                    Log.d("T", "PhoneToWatchService Inside for loop: ");
+                    Log.d("T", "PhoneToWatchService SendMessage Inside for loop: ");
                     //we find 'nodes', which are nearby bluetooth devices (aka emulators)
                     //send a message for each of these nodes (just one, for an emulator)
                     MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(

@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/hello_round"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <TextView android:id="@+id/results_winner"
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
-        android:textSize="20sp"
+        android:textSize="26sp"
         android:text="___WINNER___"/>
     <TextView android:id="@+id/results_county_state"
         android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@id/results_county_state"
         android:textSize="12sp"
-        android:text="2012 Election"/>
+        android:text="2012 Election Results"/>
 
 
     <TextView android:id="@+id/results_winpercent"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/results_winner"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:text="___WIN%___"/>
 
     <TextView android:id="@+id/results_loser"

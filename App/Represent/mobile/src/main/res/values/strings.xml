@@ -97,6 +97,6 @@
     <string name="active_committees">Active Committees:</string>
     <string name="sponsored_bills">Sponsored Bills:</string>
     <string name="more_info">MORE INFORMATION</string>
-    <string name="email">EMAIL:  </string>
-    <string name="website">WEBSITE:  </string>
+    <string name="email">MAIL:  </string>
+    <string name="website">WEB:  </string>
 </resources>
