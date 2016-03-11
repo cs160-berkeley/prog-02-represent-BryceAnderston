@@ -11,7 +11,15 @@ Bryce Anderston ([bryceanderston@berkeley.edu](mailto:your_email@berkeley.edu))
 See [a demosntration at Represent Bryce Anderston V1.] (http://screencast-o-matic.com/u/fIXe/RepresentBryceAnderstonV1)
 
 ## Screenshots
-<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+<img src="Capture Final Main/main.png" height="400" alt="Screenshot"/>
+
+<img src="Results Capitalization makes things better/main.png" height="400" alt="Screenshot"/>
+
+<img src="Very Final Details/main.png" height="400" alt="Screenshot"/>
+
+<img src="Results Capitalization makes things better/main.png" height="400" alt="Screenshot"/>
+
+<img src="Results Capitalization makes things better/main.png" height="400" alt="Screenshot"/>
 
 ## Acknowledgments
 
