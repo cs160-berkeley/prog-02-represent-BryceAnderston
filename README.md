@@ -15,11 +15,11 @@ See [a demosntration at Represent Bryce Anderston V1.] (http://screencast-o-mati
 
 <img src="screenshots/Very Final Main2.JPG" height="400" alt="Screenshot"/>
 
-<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+<img src="screenshots/Very Final Details.JPG" height="400" alt="Screenshot"/>
 
-<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+<img src="screenshots/watch true final.JPG" height="400" alt="Screenshot"/>
 
-<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+<img src="screenshots/Results Capitalization makes things better.JPG" height="400" alt="Screenshot"/>
 
 ## Acknowledgments
 
