@@ -11,7 +11,7 @@ Bryce Anderston ([bryceanderston@berkeley.edu](mailto:your_email@berkeley.edu))
 See [a demosntration at Represent Bryce Anderston V1.] (http://screencast-o-matic.com/u/fIXe/RepresentBryceAnderstonV1)
 
 ## Screenshots
-None.
+<img src="screenshots/main.png" height="400" alt="Screenshot"/>
 
 ## Acknowledgments
 
